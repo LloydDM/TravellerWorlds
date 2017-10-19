@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-import textwrap, sys
-from random import randint
+import textwrap, sys            # Standard Library modules
+from random import randint      # Standard Library modules
 
+# The following constant dicts are mapping dice roll results to text descriptions of various aspects of the world being created
 STARPORT_CHAR = {2: "A", 3: "A", 4: "A", 5: "B", 6: "B", 7: "C", 8: "C", 9: "D", 10: "E", 11: "E", 12: "X"}
 
 STARPORT_DESC = {"A": "Excellent quality installation.  Refined fuel available.  Annual maintenance overhaul available.  Shipyard capable of both starship and non-starship construction present.",
@@ -89,7 +90,9 @@ TECH_DESC = {0: ['Club, Cudgel, Spear', 'No Armor', 'No Special', 'No Computers'
              18: ['Laser Rifle', 'Battle Dress', 'Beam Laser', 'Artificial Intelligence', 'Internet', 'Matter Transport', 'Matter Transport', 'Matter Transport', 'All Drives', 'Antimatter'],
              }
 
+# Define a class called "World"
 class World(object):
+    # Initialize an instance of this class with 0's and blank strings.  name is an argument passed to the init function when an instance is created
     def __init__(self, name):
         self.name = name
         self.starport = ""
@@ -102,7 +105,8 @@ class World(object):
         self.law = 0
         self.techindexdm = 0
         self.techindex = 0
-        
+    
+    # Assign values to various variables based on the results of rolling 2D6, using provided logic from rulebook    
     def create_world(self):
         self.starport = STARPORT_CHAR[randint(2, 12)]
         if self.starport == "A":
@@ -147,6 +151,7 @@ class World(object):
         if self.techindex < 0: self.techindex = 0
         if self.techindex > 18: self.techindex = 18
     
+    # More logic to determine how advanced the tech is on this world
     def create_tech_index(self, techport, techsize, techatmo, techhydro, techpop, techgov):
         modifier = 0
         techportdm = {"A": 6, "B": 4, "C": 2, "X": -4}
@@ -163,7 +168,8 @@ class World(object):
         if techgov in [0, 5]: modifier += 1
         if techgov == 13: modifier -= 2
         return modifier
-        
+    
+    # Print formatted strings with a max length of 54 characters    
     def print_world(self):
         print self.name
         print
@@ -191,10 +197,13 @@ class World(object):
         
         
 try:
+    # Create, then print, an instance of the World class, using the first commandline arg as a name
     newworld = World(sys.argv[1])
     newworld.create_world()
     newworld.print_world()
 except IndexError:
+    # Python will throw an IndexError for sys.argv[1] if there is no argument.
+    # If that happens, catch it and prompt the user for a name.  Then, create and print the world 
     worldname = raw_input("World Name: ")
     newworld = World(worldname)
     newworld.create_world()
